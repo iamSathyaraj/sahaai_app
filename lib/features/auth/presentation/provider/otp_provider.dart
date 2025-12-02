@@ -34,7 +34,7 @@ final List<TextEditingController>otpControllers= List.generate(6, (_) =>TextEdit
   }
 
 
-  Future<bool> submitOtp(String userId) async {
+  Future<bool> submitOtp(int userId) async {
 
     if(!validateOtp()){
       return false;
@@ -45,7 +45,7 @@ final List<TextEditingController>otpControllers= List.generate(6, (_) =>TextEdit
 
     try {
 
-   final  model=OtpVerifyRequestModel(userId: userId, otp: otps);
+   final  model=OtpVerifyRequestModel(id: userId, otp: otps);
 
       final success = await verifyOtpUseCase.execute(model);
 

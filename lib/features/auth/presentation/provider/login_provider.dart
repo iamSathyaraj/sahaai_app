@@ -1,63 +1,12 @@
-// import 'package:flutter/material.dart';
-// import 'package:sahaai/features/auth/domain/usecases/login_usecase.dart';
-
-// class LoginProvider extends ChangeNotifier {
-
-// final LoginUseCase loginUseCase;
-
-//   final emailController = TextEditingController();
-//   final passwordController = TextEditingController();
-
-//     String? emailError;
-//     String? passwordError;
-
-//     bool validate() {
-//     bool isValid = true;
-
-//     if (emailController.text.isEmpty) {
-//       emailError = 'Please enter email';
-//       isValid = false;
-//     } else if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-//         .hasMatch(emailController.text)) {
-//       emailError = 'Please enter a valid email';
-//       isValid = false;
-//     } else {
-//       emailError = null;
-//     }
-
-//     if (passwordController.text.isEmpty) {
-//       passwordError = 'Please enter password';
-//       isValid = false;
-//     } else if (!RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$')
-//         .hasMatch(passwordController.text)) {
-//       passwordError = 'Password is not strong enough';
-//       isValid = false;
-//     } else {
-//       passwordError = null;
-//     }
-
-//     notifyListeners();
-//     return isValid;
-//   }
-
-//   @override
-//   void dispose() {
-//     emailController.dispose();
-//     passwordController.dispose();
-//     super.dispose();
-//   }
-
-// }
-
-
 import 'package:flutter/material.dart';
 import 'package:sahaai/features/auth/data/models/login_request_model.dart';
 import 'package:sahaai/features/auth/domain/entities/user_entity.dart';
 import 'package:sahaai/features/auth/domain/usecases/login_usecase.dart';
 
 class LoginProvider extends ChangeNotifier {
+  final LoginUseCase loginUseCase;
 
-  LoginProvider();
+  LoginProvider(this.loginUseCase);
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -67,6 +16,7 @@ class LoginProvider extends ChangeNotifier {
   
   bool isLoading = false;
   String? generalErrorMessage;
+  UserEntity? loggedInUser;
 
   void resetErrors() {
     emailError = null;
@@ -96,6 +46,34 @@ class LoginProvider extends ChangeNotifier {
 
     notifyListeners();
     return isValid;
+  }
+
+  Future<bool> submitLogin() async {
+    if (!validate()) {
+      return false;
+    }
+
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      final model = LoginRequestModel(
+        userName: emailController.text.trim(),
+        password: passwordController.text,
+      );
+
+      UserEntity user = await loginUseCase.call(model);
+      loggedInUser = user;
+
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      generalErrorMessage = e.toString();
+      isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 
   @override

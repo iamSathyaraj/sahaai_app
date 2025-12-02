@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sahaai/core/enums/role.dart';
+import 'package:sahaai/features/auth/data/models/register_request_model.dart';
+import 'package:sahaai/features/auth/domain/usecases/register_usecase.dart';
+import 'package:sahaai/features/auth/domain/usecases/register_worker_usecase.dart';
 
 class RegisterProvider extends ChangeNotifier {
 
-RegisterProvider();
+final RegisterUseCase registerUseCase;
+final RegisterWorkerUseCase registerWorkerUseCase;
+
+RegisterProvider(
+  this.registerUseCase,
+this.registerWorkerUseCase);
 
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
@@ -20,7 +29,7 @@ RegisterProvider();
   String? confirmPasswordError;
 
     bool isLoading = false;
-    String? registeredUserId;
+    int? registeredUserId;
   String? generalErrorMessage;
 
   void resetErrors() {
@@ -78,6 +87,7 @@ RegisterProvider();
       isValid = false;
     }
 
+
       final confirmPass=confirmPasswordController.text;
     if (confirmPass.isEmpty) {
       confirmPasswordError = 'Confirm your password';
@@ -91,7 +101,57 @@ RegisterProvider();
     return isValid;
   }
 
- 
+  Future <bool> submitRegister(UserRole role)async{
+
+    if(!validate()){
+      return false;
+    }
+
+    isLoading=true;
+    notifyListeners();
+
+    try{
+  final model=RegisterRequestModel(
+    fullName: fullNameController.text.trim(),
+     email: emailController.text.trim(),
+     phone: phoneController.text.trim(),
+       userName: usernameController.text.trim(),
+        password: passwordController.text.trim(),
+         confirmPassword: confirmPasswordController.text.trim()
+         );
+  print(" Sending register request… Role: $role");
+  print(" Payload: ${model.toJson()}");
+
+        
+        if(role==UserRole.customer){
+         final registerResponse = await registerUseCase.call(model); 
+                  registeredUserId = registerResponse.userId ;
+      print(" Customer registration success. User ID: ${registerResponse.userId}");
+
+
+        }else{
+          final worker= await registerWorkerUseCase.call(model);
+                registeredUserId = worker.userId;
+                      print("Worker registration success. User ID: ${worker.userId}");
+
+
+            }
+
+
+          isLoading = false;
+      notifyListeners();
+      return true;
+} catch (e){  
+  print(" Registration FAILED: $e");
+  generalErrorMessage = e.toString();
+
+  generalErrorMessage=e.toString();
+  isLoading=false;
+  notifyListeners();
+  return false;
+}
+
+  }
 
   @override
   void dispose() {

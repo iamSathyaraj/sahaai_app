@@ -5,15 +5,16 @@ import 'package:sahaai/features/auth/domain/usecases/otp_verify_usecase.dart';
 import 'package:sahaai/features/auth/presentation/provider/otp_provider.dart';
 
 class OtpVerificationPage extends StatelessWidget {
-  final String userId; 
-  final VerifyOtpUseCase verifyOtpUseCase;
-
+  final int userId; 
+ 
 OtpVerificationPage({
   required this.userId,
- required this.verifyOtpUseCase});
+ });
 
   @override
   Widget build(BuildContext context) {
+        final verifyOtpUseCase = context.read<VerifyOtpUseCase>();
+
     final mainColor = Color(0xFF466765);
 
     return ChangeNotifierProvider<OtpProvider>(

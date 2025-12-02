@@ -103,18 +103,17 @@ class LoginPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ],
-
-                  SizedBox(height: 16),
+                   SizedBox(height: 16),
 
                   SizedBox(
                     height: 48,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
-                        elevation: 7,
-                        shadowColor: mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                        elevation: 7,                        
+                        shadowColor: mainColor,              
+                        shape: RoundedRectangleBorder(            
+                          borderRadius: BorderRadius.circular(16),           
                         ),
                       ),
                       onPressed: loginProvider.isLoading
@@ -146,6 +145,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 14),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
