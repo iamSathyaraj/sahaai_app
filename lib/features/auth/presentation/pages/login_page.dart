@@ -5,6 +5,8 @@ import 'package:sahaai/features/auth/presentation/provider/login_provider.dart';
 import 'package:sahaai/features/auth/presentation/widgets/rounded_textfield.dart';
 import 'package:sahaai/features/auth/presentation/widgets/socialbutton.dart';
 import 'package:sahaai/features/home/presentation/pages/bottom_nav_menu.dart';
+import 'package:sahaai/features/home/presentation/pages/home_screen.dart';
+import 'package:sahaai/features/home/presentation/pages/service_issue_screen.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -151,7 +153,7 @@ class LoginPage extends StatelessWidget {
                     children: [
                       SocialButton(
                         icon: Icons.g_mobiledata,
-                        background: Colors.white,
+                        background: Colors.white, 
                         iconColor: Colors.blue,
                         onPressed: () {
                         },
@@ -162,7 +164,7 @@ class LoginPage extends StatelessWidget {
                         background: Colors.black,
                         iconColor: Colors.white,
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
                         },
                       ),
                     ],

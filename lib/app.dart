@@ -10,7 +10,6 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Sahaai',
       routerConfig: AppRouter.router,
-      
-    );
+      );
   }
 }
