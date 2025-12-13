@@ -226,7 +226,6 @@ class LocationProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
-  // ✅ FIXED: Added missing variables
   String? primaryLocationId;
   String? primaryAddress;
 
@@ -241,14 +240,12 @@ class LocationProvider with ChangeNotifier {
   late final LocationRepository _repository;
   LocationProvider(this._repository);
 
-  // STEP 1 & 3: App launch - CACHE ONLY (NO GPS!)
   Future<void> loadCachedPrimary() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       primaryLocationId = prefs.getString('primary_location_id');
       primaryAddress = prefs.getString('primary_location_address');
       
-      // Also try old cache format
       if (primaryAddress == null) {
         final cachedAddress = prefs.getString('primary_location');
         if (cachedAddress != null) {
@@ -262,40 +259,30 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  // STEP 2: FIRST ISSUE - GPS → Backend → PRIMARY ⭐
 Future<String?> fetchFirstLocation() async {
-  print('🔥 STEP 1: Starting fetchFirstLocation()');
   
   _isLoading = true;
   _error = null;
   notifyListeners();
 
   try {
-    print('🔥 STEP 2: Checking permission status...');
     final status = await Permission.location.status;
-    print('🔥 Permission status BEFORE = $status');
     
     final hasPermission = await requestPermission();
-    print('🔥 STEP 3: Permission AFTER request = $hasPermission');
     
     if (!hasPermission) {
       _error = 'Location permission denied';
-      print('🔥 ERROR: PERMISSION DENIED!');
       return null;
     }
 
-    print('🔥 STEP 4: Permission OK → Calling GPS Service');
     final locationData = await LocationService.getCurrentLocation();
-    print('🔥 STEP 5: GPS result = $locationData');
     
     if (locationData == null) {
       _error = 'Unable to get location';
-      print('🔥 ERROR: NO GPS DATA!');
       return null;
     }
 
-    print('🔥 STEP 6: GPS OK → lat=${locationData['latitude']}, lng=${locationData['longitude']}');
-    print('🔥 STEP 7: Calling Backend saveLocation...');
+  
     
     final location = await _repository.saveLocation(
       latitude: locationData['latitude'],
@@ -303,7 +290,6 @@ Future<String?> fetchFirstLocation() async {
       address: locationData['address'],
     );
 
-    print('🔥 STEP 8: Backend result = $location');
 
     if (location != null) {
       _primaryLocation = location;
@@ -311,20 +297,16 @@ Future<String?> fetchFirstLocation() async {
       primaryAddress = location.address;
       _locations.insert(0, location);
       await _cachePrimaryLocation(location);
-      print('✅ SUCCESS: Primary location cached! ID=${location.id}');
     } else {
-      print('❌ Backend returned null location');
     }
 
     return location?.id;
   } catch (e) {
-    print('🔥 FINAL ERROR: $e');
     _error = e.toString();
     return null;
   } finally {
     _isLoading = false;
     notifyListeners();
-    print('🔥 fetchFirstLocation() finished');
   }
 }
 
@@ -371,7 +353,6 @@ Future<String?> fetchFirstLocation() async {
   //   }
   // }
 
-  // STEP 4: Load history for CHANGE modal
   Future<void> loadLocationHistory() async {
     _isLoading = true;
     notifyListeners();
@@ -395,7 +376,7 @@ Future<String?> fetchFirstLocation() async {
   }
 
   Future<void> fetchCurrentLocationAndSave() async {
-    await fetchFirstLocation();  // Reuse same logic
+    await fetchFirstLocation();  
   }
 
   Future<void> _cachePrimaryLocation(LocationEntity location) async {
@@ -403,7 +384,7 @@ Future<String?> fetchFirstLocation() async {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('primary_location_id', location.id);
       await prefs.setString('primary_location_address', location.address);
-      await prefs.setString('primary_location', location.address);  // Backward compat
+      await prefs.setString('primary_location', location.address);  
     } catch (e) {
       print('Cache save error: $e');
     }
