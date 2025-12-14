@@ -31,24 +31,21 @@ void initState() {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     final locProvider = Provider.of<LocationProvider>(context, listen: false);
     
-    print('🏠 HomePage: Permission + GPS setup...');
+    print(' HomePage: Permission + GPS setup...');
     
-    // 🚀 STEP 1: Permission (popup if needed)
     final status = await Permission.location.status;
-    print('🏠 Permission status: $status');
+    print(' Permission status: $status');
     
     if (!status.isGranted) {
-      print('🏠 Showing permission popup...');
-      await locProvider.requestPermission();  // 👈 POPUP!
+      print(' Showing permission popup');
+      await locProvider.requestPermission();  
     }
     
-    // 🚀 STEP 2: AUTO GPS + Cache (Your REAL goal!)
-    print('🏠 AUTO GPS fetch...');
-    await locProvider.fetchFirstLocation();  // 👈 GPS + Backend + Cache!
+    print(' AUTO GPS fetch');
+    await locProvider.fetchFirstLocation(); 
     
-    // STEP 3: Final cache load
     await locProvider.loadCachedPrimary();
-    print('🏠 Setup COMPLETE!');
+    print(' Setup COMPLETE');
 
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
 await homeProvider.getHomeServices(); 
