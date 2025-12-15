@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sahaai/features/home/presentation/pages/issue_confirm_screen.dart';
+import 'package:sahaai/features/home/presentation/pages/issue_searching_screen.dart';
 import 'package:sahaai/features/home/presentation/provider/issue_provider.dart';
 import 'package:sahaai/features/home/domain/entities/location_entity.dart';
 // import 'issue_confirmation_screen.dart'; // Create this next
@@ -194,7 +195,10 @@ class IssueReviewScreen extends StatelessWidget {
       if (success && context.mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const IssueConfirmationScreen()),
+          MaterialPageRoute(builder: (_) => IssueSearchingScreen(
+              latitude: location.latitude,
+            longitude: location.longitude,
+          )),
         );
       }
     });
