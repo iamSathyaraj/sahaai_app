@@ -14,6 +14,11 @@ import 'package:sahaai/features/auth/presentation/provider/otp_provider.dart';
 import 'package:sahaai/features/auth/presentation/provider/register_provider.dart';
 import 'package:sahaai/features/home/data/repositories/home_repository_impl.dart';
 import 'package:sahaai/features/home/domain/usecases/get_service_usecase.dart';
+import 'package:sahaai/features/worker/home/data/datasources/worker_status_remote_datasource_impl.dart';
+import 'package:sahaai/features/worker/home/data/repositories/worker_status_repository_impl.dart';
+import 'package:sahaai/features/worker/home/domain/usecases/worker_go_offline_usecase.dart';
+import 'package:sahaai/features/worker/home/domain/usecases/worker_go_online_usecase.dart';
+import 'package:sahaai/features/worker/home/presentation/providers/worker_status_provider.dart';
 
 void main() {
   final client = DioClient(baseUrl: "http://192.168.1.90:5016/api/");
@@ -27,11 +32,18 @@ void main() {
   final loginUseCase = LoginUseCase(authRepository);
   final otpVerifyUseCase = VerifyOtpUseCase(authRepository);
 
+  final workerStatusRemote = WorkerStatusRemoteDataSourceImpl(client);
+final workerStatusRepository = WorkerStatusRepositoryImpl(workerStatusRemote);
+final workerGoOnlineUseCase = WorkerGoOnlineUseCase(workerStatusRepository);
+final workerGoOfflineUseCase = WorkerGoOfflineUseCase(workerStatusRepository);
+
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => RegisterProvider(registerUseCase, registerWorkerUseCase),
+          create: (_) => RegisterProvider(registerUseCase,
+           registerWorkerUseCase),
         ),
         ChangeNotifierProvider(
           create: (_) => LoginProvider(loginUseCase),
@@ -39,6 +51,14 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => OtpProvider(otpVerifyUseCase),
         ),
+
+
+        ChangeNotifierProvider(
+         create: (_) => WorkerStatusProvider(
+            goOnlineUseCase: workerGoOnlineUseCase,
+               goOfflineUseCase: workerGoOfflineUseCase,
+           ),
+         ),
       ],
       child: const App(),
     ),
