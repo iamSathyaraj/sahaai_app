@@ -5,6 +5,7 @@ import 'package:sahaai/features/auth/presentation/provider/login_provider.dart';
 import 'package:sahaai/features/auth/presentation/widgets/rounded_textfield.dart';
 import 'package:sahaai/features/auth/presentation/widgets/socialbutton.dart';
 import 'package:sahaai/features/home/presentation/pages/bottom_nav_menu.dart';
+import 'package:sahaai/features/worker/home/presentation/pages/worker_online_status_screen.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -179,7 +180,8 @@ class LoginPage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                          context.go("/registration");
+                            // Navigator.push(context, MaterialPageRoute(builder: (context)=>WorkerRequestsScreen()));
+                          // context.go("/registration");
                           },
                           child: Text(
                             'Sign Up',
