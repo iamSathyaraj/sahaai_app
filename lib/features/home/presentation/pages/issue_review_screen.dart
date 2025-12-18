@@ -166,7 +166,7 @@ class IssueReviewScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12), 
         border: Border.all(color: Colors.grey[300]!),
       ),
       child: Column(

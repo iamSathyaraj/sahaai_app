@@ -20,6 +20,7 @@ import 'package:sahaai/features/worker/home/domain/usecases/worker_go_offline_us
 import 'package:sahaai/features/worker/home/domain/usecases/worker_go_online_usecase.dart';
 import 'package:sahaai/features/worker/home/presentation/providers/worker_status_provider.dart';
 
+
 void main() {
   final client = DioClient(baseUrl: "http://192.168.1.90:5016/api/");
   final authService = AuthService(client.dio);
@@ -36,7 +37,6 @@ void main() {
 final workerStatusRepository = WorkerStatusRepositoryImpl(workerStatusRemote);
 final workerGoOnlineUseCase = WorkerGoOnlineUseCase(workerStatusRepository);
 final workerGoOfflineUseCase = WorkerGoOfflineUseCase(workerStatusRepository);
-
 
   runApp(
     MultiProvider(
@@ -59,6 +59,7 @@ final workerGoOfflineUseCase = WorkerGoOfflineUseCase(workerStatusRepository);
                goOfflineUseCase: workerGoOfflineUseCase,
            ),
          ),
+
       ],
       child: const App(),
     ),
