@@ -1,7 +1,7 @@
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sahaai/core/enums/service_request_status.dart';
 import '../providers/issue_tracking_provider.dart';
 
 class SearchingWorkerScreen extends StatefulWidget {
@@ -15,6 +15,7 @@ class SearchingWorkerScreen extends StatefulWidget {
 class _SearchingWorkerScreenState extends State<SearchingWorkerScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -22,6 +23,16 @@ class _SearchingWorkerScreenState extends State<SearchingWorkerScreen>
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 2))
           ..repeat();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      // Real init: REST + SignalR
+      context.read<IssueTrackingProvider>().init(widget.requestId);
+    }
   }
 
   @override
@@ -34,10 +45,9 @@ class _SearchingWorkerScreenState extends State<SearchingWorkerScreen>
   Widget build(BuildContext context) {
     final provider = context.watch<IssueTrackingProvider>();
 
-    final text =
-        provider.status == ServiceRequestStatus.expandingRadius
-            ? "Expanding search area to find more workers..."
-            : "Searching nearby workers...";
+    final text = provider.status == ServiceRequestStatus.expandingRadius
+        ? "Expanding search area to find more workers..."
+        : "Searching nearby workers...";
 
     return Scaffold(
       body: Stack(
@@ -81,33 +91,15 @@ class _SearchingWorkerScreenState extends State<SearchingWorkerScreen>
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
-                      TextButton( 
-                        onPressed: () =>
-                            context.read<IssueTrackingProvider>()
-                                .simulateExpandRadius(),
-                        child: const Text(
-                          'Simulate Expand Radius',
-                          style: TextStyle(color: Colors.white),
+                      if (provider.errorMessage != null)
+                        Text(
+                          provider.errorMessage!,
+                          style: const TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () =>
-                            context.read<IssueTrackingProvider>()
-                                .simulateWorkerComing(),
-                        child: const Text(
-                          'Simulate Worker Found',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () =>
-                            context.read<IssueTrackingProvider>()
-                                .simulateNoWorkers(),
-                        child: const Text(
-                          'Simulate No Workers',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -119,4 +111,3 @@ class _SearchingWorkerScreenState extends State<SearchingWorkerScreen>
     );
   }
 }
-

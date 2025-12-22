@@ -1,5 +1,7 @@
 import 'package:sahaai/core/enums/service_request_status.dart';
+
 import '../../domain/entities/worker_entity.dart';
+// import '../../domain/entities/service_request_status.dart';
 import '../../domain/repositories/issue_matching_repository.dart';
 import '../datasources/issue_matching_remote_datasource.dart';
 import '../datasources/issue_matching_signalr_datasource.dart';
@@ -31,26 +33,20 @@ class IssueMatchingRepositoryImpl implements IssueMatchingRepository {
 
   @override
   Stream<ServiceRequestStatus> listenStatus(String issueId) async* {
-    try {
-      await signalR.connect(issueId);
-yield* signalR
+    await signalR.connect(issueId);
+    // yield* signalR.statusStream(issueId).map(fromInt);
+    yield* signalR
     .statusStream(issueId)
-    .map(ServiceRequestStatus.fromInt);
-    } catch (e) {
-      yield* Stream.error(e);
-    }
+    .map((value) => ServiceRequestStatus.fromInt(value));
+
   }
 
   @override
   Stream<WorkerEntity> listenWorkerAccepted(String issueId) async* {
-    try {
-      await signalR.connect(issueId);
-      yield* signalR.workerStream(issueId).map(
-        (json) => WorkerModel.fromJson(json),
-      );
-    } catch (e) {
-      yield* Stream.error(e);
-    }
+    await signalR.connect(issueId);
+    yield* signalR.workerStream(issueId).map(
+      (json) => WorkerModel.fromJson(json),
+    );
   }
 
   @override
