@@ -29,6 +29,7 @@ import 'package:sahaai/features/worker/home/data/repositories/worker_status_repo
 import 'package:sahaai/features/worker/home/domain/usecases/worker_go_offline_usecase.dart';
 import 'package:sahaai/features/worker/home/domain/usecases/worker_go_online_usecase.dart';
 import 'package:sahaai/features/worker/home/presentation/providers/worker_status_provider.dart';
+import 'package:sahaai/features/worker/job_request/presentation/providers/worker_job_provider.dart';
 
 
 void main() {
@@ -98,6 +99,8 @@ final listenWorkerAcceptedUseCase = ListenWorkerAcceptedUseCase(issueMatchingRep
     listenWorkerAcceptedUseCase: listenWorkerAcceptedUseCase,
   ),
 ),
+ChangeNotifierProvider(
+  create: (_)=>WorkerJobProvider())
 
       ],
       child: const App(),
