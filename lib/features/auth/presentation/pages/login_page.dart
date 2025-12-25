@@ -6,6 +6,8 @@ import 'package:sahaai/features/auth/presentation/widgets/rounded_textfield.dart
 import 'package:sahaai/features/auth/presentation/widgets/socialbutton.dart';
 import 'package:sahaai/features/home/presentation/pages/bottom_nav_menu.dart';
 import 'package:sahaai/features/worker/home/presentation/pages/worker_online_status_screen.dart';
+import 'package:sahaai/features/worker/job_request/presentation/pages/job_assigned_screen.dart';
+import 'package:sahaai/features/worker/job_request/presentation/pages/worker_waiting_screen.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -163,7 +165,7 @@ class LoginPage extends StatelessWidget {
                         background: Colors.black,
                         iconColor: Colors.white,
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>WorkerWaitingScreen()));
                         },
                       ),
                     ],
