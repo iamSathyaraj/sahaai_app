@@ -36,7 +36,7 @@ class IncomingJobScreen extends StatelessWidget {
               job: job,
                onExpired: () {
                provider.onJobExpired();
-                context.go('/worker/assigned');
+                context.go('/worker/missed');
                  },
                onAccept: () {
 

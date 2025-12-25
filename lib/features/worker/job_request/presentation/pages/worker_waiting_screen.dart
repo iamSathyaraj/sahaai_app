@@ -125,12 +125,6 @@ class WorkerWaitingScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // UI phase → no backend logic yet
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Offline feature coming soon'),
-                      ),
-                    );
                   },
                   child: const Text(
                     'GO OFFLINE',
