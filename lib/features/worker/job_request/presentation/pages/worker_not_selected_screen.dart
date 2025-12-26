@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MissedJobScreen extends StatelessWidget {
   const MissedJobScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(Duration(seconds: 3), () {
+        context.go('/worker/waiting');
+      });
+    });
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(

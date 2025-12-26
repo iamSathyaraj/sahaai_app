@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sahaai/features/worker/job_request/domain/entities/worker_job_entity.dart';
 import '../providers/worker_job_provider.dart';
 import 'accept_reject_buttons.dart';
 import 'countdown_timer.dart';
 import 'job_detail_row.dart';
 
 class IncomingJobCard extends StatelessWidget {
-  final IncomingJobUIModel job;
+  // final IncomingJobUIModel job
+   final JobEntity job;
+  final int secondsRemaining; // ✅ NEW
+  final bool isLoading;
   final VoidCallback onAccept;
   final VoidCallback onReject;
   final VoidCallback onExpired;
@@ -15,6 +19,8 @@ class IncomingJobCard extends StatelessWidget {
   const IncomingJobCard({
     super.key,
     required this.job,
+     required this.secondsRemaining,
+    required this.isLoading,
     required this.onAccept,
     required this.onReject,
     required this.onExpired,
@@ -44,22 +50,22 @@ class IncomingJobCard extends StatelessWidget {
 
           const SizedBox(height: 18),
 
-          JobDetailRow(label: 'Service', value: job.service),
-          JobDetailRow(label: 'Issue', value: job.issue),
+          JobDetailRow(label: 'Service', value: job.serviceType),
+          JobDetailRow(label: 'Issue', value: job.issueDescription),
           JobDetailRow(
             label: 'Distance',
             value: '${job.distanceKm.toStringAsFixed(1)} km',
           ),
-          JobDetailRow(
-            label: 'Earnings',
-            value: '₹${job.amount}',
-            valueColor: Colors.greenAccent,
-          ),
+          // JobDetailRow(
+          //   label: 'Earnings',
+          //   value: '₹${job.amount}',
+          //   valueColor: Colors.greenAccent,
+          // ),
            
           const SizedBox(height: 16),
 
           CountdownTimer(
-            seconds: job.expiresInSeconds,
+            seconds: secondsRemaining,
             onExpired: onExpired,
           ),
 

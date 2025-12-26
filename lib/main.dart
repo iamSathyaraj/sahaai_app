@@ -29,6 +29,9 @@ import 'package:sahaai/features/worker/home/data/repositories/worker_status_repo
 import 'package:sahaai/features/worker/home/domain/usecases/worker_go_offline_usecase.dart';
 import 'package:sahaai/features/worker/home/domain/usecases/worker_go_online_usecase.dart';
 import 'package:sahaai/features/worker/home/presentation/providers/worker_status_provider.dart';
+import 'package:sahaai/features/worker/job_request/data/datasources/job_remote_data_source_impl.dart';
+import 'package:sahaai/features/worker/job_request/data/datasources/worker_job_signalr_datasource_impl.dart';
+import 'package:sahaai/features/worker/job_request/data/repositories/worker_job_repository_impl.dart';
 import 'package:sahaai/features/worker/job_request/presentation/providers/worker_job_provider.dart';
 
 
@@ -68,6 +71,17 @@ final selectWorkerUseCase = SelectWorkerUseCase(issueMatchingRepository);
 final listenIssueStatusUseCase = ListenIssueStatusUseCase(issueMatchingRepository);
 final listenWorkerAcceptedUseCase = ListenWorkerAcceptedUseCase(issueMatchingRepository);
 
+
+// Add BEFORE runApp in main.dart
+final jobRemoteDataSource = JobRemoteDataSourceImpl(dio: client.dio);
+final jobSignalRDataSource = WorkerJobSignalRDataSourceImpl(
+  hubUrl: "http://192.168.1.90:5016/hubs/worker",
+);
+final jobRepository = JobRepositoryImpl(
+  remote: jobRemoteDataSource,
+  signalR: jobSignalRDataSource,
+);
+
   runApp(
     MultiProvider(
       providers: [
@@ -99,8 +113,8 @@ final listenWorkerAcceptedUseCase = ListenWorkerAcceptedUseCase(issueMatchingRep
     listenWorkerAcceptedUseCase: listenWorkerAcceptedUseCase,
   ),
 ),
-ChangeNotifierProvider(
-  create: (_)=>WorkerJobProvider())
+ChangeNotifierProvider(create: (_) => WorkerJobProvider(jobRepository)),
+
 
       ],
       child: const App(),
