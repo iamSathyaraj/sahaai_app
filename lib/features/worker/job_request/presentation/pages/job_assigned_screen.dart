@@ -54,9 +54,9 @@ class JobAssignedScreen extends StatelessWidget {
               title: 'Job Details',
               children: [
                 _row('Customer', job.customerName),
-                _row('Service', job.service),
-                _row('Issue', job.issue),
-                _row('Address', job.address),
+                _row('Service', job.serviceType),
+                _row('Issue', job.issueDescription),
+                _row('Address', job.area),
               ],
             ),
 
